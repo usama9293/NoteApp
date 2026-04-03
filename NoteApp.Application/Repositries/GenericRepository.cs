@@ -1,54 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 using NoteApp.Core.Interfaces;
 
-
-namespace NoteApp.Application.Repositries
+namespace NoteApp.Application.Repositories
 {
-
-     
-
-    public class GenericRepository : IGenericRepository
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-
         public DbContext _context;
 
-            public GenericRepository(DbContext context)
-            {
-                _context = context;
-            }
-
-        public async Task AddAsync<T>(T entity) where T : class
+        public GenericRepository(DbContext context)
         {
-            await _context.Set<T>().AddAsync(entity);
-                await _context.SaveChangesAsync();
+            _context = context;
         }
 
-        public async Task DeleteAsync<T>(T entity) where T : class
+        public async Task AddAsync(T entity)
+        {
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
-        
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
         }
 
-        public async   Task<T> GetByIdAsync<T>(Guid id) where T : class
+        public async Task<T?> GetByIdAsync(Guid id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public async Task UpdateAsync<T>(T entity) where T : class
+        public async Task UpdateAsync(T entity)
         {
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
         }
-        }
-
-
     }
+}
