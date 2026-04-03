@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Api/">
+    <Project Path="NoteAp.Api/NoteApp.Api.csproj" />
+  </Folder>
+  <Folder Name="/Application/">
+    <Project Path="NoteApp.Application/NoteApp.Application.csproj" />
+  </Folder>
+  <Folder Name="/Core/">
+    <Project Path="NoteApp.Core/NoteApp.Core.csproj" />
+  </Folder>
+</Solution>
