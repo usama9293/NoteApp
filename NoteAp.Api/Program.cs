@@ -17,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("DefaultConnection is missing in configuration.");
 
@@ -24,9 +25,11 @@ builder.Services.AddDbContext<ApDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+builder.Services.AddScoped<IGenericRepository<Note>, GenericRepository<Note>>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INoteService, NoteService>();
 
 var jwtSecret = builder.Configuration["JwtOptions:SecretKey"]
     ?? throw new InvalidOperationException("JWT secret key is missing in configuration.");
