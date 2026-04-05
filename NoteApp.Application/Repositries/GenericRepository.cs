@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using NoteApp.Application.Data;
 using NoteApp.Core.Interfaces;
 
 namespace NoteApp.Application.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        public DbContext _context;
+        private readonly ApDbContext _context;
 
-        public GenericRepository(DbContext context)
+        public GenericRepository(ApDbContext context)
         {
             _context = context;
         }

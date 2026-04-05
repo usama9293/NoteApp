@@ -8,4 +8,7 @@
   <Folder Name="/Core/">
     <Project Path="NoteApp.Core/NoteApp.Core.csproj" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
 </Solution>

@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using NoteApp.Application.Data;
 using NoteApp.Core.Entities;
+using NoteApp.Core.Interfaces;
 
-namespace NoteApp.Application.Repositries
+namespace NoteApp.Application.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
-        public DbContext DbContext { get; }
+        public ApDbContext DbContext { get; }
 
-        public UserRepository(DbContext dbContext)
+        public UserRepository(ApDbContext dbContext)
         {
             DbContext = dbContext;
         }
+
         public Task<User?> FindByEmailAsync(string email)
         {
-            return DbContext.Set<User>().FirstOrDefaultAsync(u => u.Email == email);
-            
+            return DbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
-
     }
 }

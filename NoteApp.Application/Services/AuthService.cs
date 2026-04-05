@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NoteApp.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using NoteApp.Core.Interfaces;
 using NoteApp.Core.Dtos;
 using NoteApp.Core.Entities;
 
@@ -12,18 +8,23 @@ namespace NoteApp.Application.Services
 {
     public class AuthService : IAuthService
     {
-      
         public IGenericRepository<User> UserRepository { get; }
+        public IUserRepository UserRepo { get; }
+        public JwtService JwtService { get; }
 
-        public AuthService(DbContext dbContext, IGenericRepository<User> userRepository)
+        public AuthService(
+            IGenericRepository<User> userRepository,
+            IUserRepository userRepo,
+            JwtService jwtService)
         {
-            
             UserRepository = userRepository;
+            UserRepo = userRepo;
+            JwtService = jwtService;
         }
-         public Task<string> RegisterAsync(UserCreateRequestDto userDto)
-        {
 
-            var existingUser = UserRepository.GetAllAsync().Result.FirstOrDefault(u => u.Email == userDto.Email);
+        public async Task<string> RegisterAsync(UserCreateRequestDto userDto)
+        {
+            var existingUser = await UserRepo.FindByEmailAsync(userDto.Email);
             if (existingUser != null)
             {
                 throw new Exception("Email already exists.");
@@ -38,30 +39,22 @@ namespace NoteApp.Application.Services
                 Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password) 
             };
 
-            UserRepository.AddAsync(user);
+            await UserRepository.AddAsync(user);
 
-            return Task.FromResult("User registered successfully.");
-
-          
+            return "User registered successfully.";
         }
 
-        public Task<string> LoginAsync(LoginRequestDto LoginDto)
+        public async Task<string> LoginAsync(LoginRequestDto loginDto)
         {
+            var user = await UserRepo.FindByEmailAsync(loginDto.Email);
 
-        var user = UserRepository.GetAllAsync().Result.FirstOrDefault(u => u.Email == LoginDto.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+            {
+                throw new Exception("Invalid email or password.");
+            }
 
-        if (user == null || !BCrypt.Net.BCrypt.Verify(LoginDto.Password, user.Password))
-        {
-            throw new Exception("Invalid email or password.");
+            var token = JwtService.GenerateToken(user);
+            return token;
         }
-
-        return Task.FromResult("Login successful.");
-   
-                 
-        
-        }
-
-
-
     }
 }
