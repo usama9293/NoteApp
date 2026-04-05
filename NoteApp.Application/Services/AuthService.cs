@@ -1,6 +1,7 @@
 ﻿using NoteApp.Core.Interfaces;
 using NoteApp.Core.Dtos;
 using NoteApp.Core.Entities;
+using NoteApp.Core.Exceptions;
 
 
 
@@ -27,7 +28,7 @@ namespace NoteApp.Application.Services
             var existingUser = await UserRepo.FindByEmailAsync(userDto.Email);
             if (existingUser != null)
             {
-                throw new Exception("Email already exists.");
+                throw new UserAlreadyExists($"A user with the email {userDto.Email} already exists.");
             }
 
             var user = new User
@@ -50,7 +51,7 @@ namespace NoteApp.Application.Services
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
             {
-                throw new Exception("Invalid email or password.");
+                throw new UserNotFound("Invalid email or password.");
             }
 
             var token = JwtService.GenerateToken(user);
