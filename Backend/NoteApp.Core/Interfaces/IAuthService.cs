@@ -7,8 +7,8 @@ namespace NoteApp.Core.Interfaces
 {
     public interface IAuthService 
     {
-        Task<string> RegisterAsync(UserCreateRequestDto userDto);
-        Task<string> LoginAsync(LoginRequestDto LoginDto);
+        Task<AuthResponseDto> RegisterAsync(UserCreateRequestDto userDto);
+        Task<AuthResponseDto> LoginAsync(LoginRequestDto LoginDto);
        
     }
 }

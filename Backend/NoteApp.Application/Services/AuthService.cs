@@ -23,7 +23,7 @@ namespace NoteApp.Application.Services
             JwtService = jwtService;
         }
 
-        public async Task<string> RegisterAsync(UserCreateRequestDto userDto)
+        public async Task<AuthResponseDto> RegisterAsync(UserCreateRequestDto userDto)
         {
             var existingUser = await UserRepo.FindByEmailAsync(userDto.Email);
             if (existingUser != null)
@@ -42,10 +42,22 @@ namespace NoteApp.Application.Services
 
             await UserRepository.AddAsync(user);
 
-            return "User registered successfully.";
+            var token = JwtService.GenerateToken(user);
+
+            return new AuthResponseDto
+            {
+                Token = token,
+                User = new UserResponseDto
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email
+                }
+            };
         }
 
-        public async Task<string> LoginAsync(LoginRequestDto loginDto)
+        public async Task<AuthResponseDto> LoginAsync(LoginRequestDto loginDto)
         {
             var user = await UserRepo.FindByEmailAsync(loginDto.Email);
 
@@ -55,7 +67,17 @@ namespace NoteApp.Application.Services
             }
 
             var token = JwtService.GenerateToken(user);
-            return token;
+            return new AuthResponseDto
+            {
+                Token = token,
+                User = new UserResponseDto
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email
+                }
+            };
         }
     }
 }
