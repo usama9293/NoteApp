@@ -1,7 +1,8 @@
 import Api from "./api";
+import type { Note } from "../Types";
 
 
-export const createNote = async (noteData: { title: string; content: string }) => {
+export const createNote = async (noteData: { title: string; content: string }): Promise<Note> => {
   try {
     const response = await Api.post('/notes', noteData);
     return response.data;
@@ -12,7 +13,7 @@ export const createNote = async (noteData: { title: string; content: string }) =
 
 };
 
-export const getNotes = async () => {
+export const getNotes = async (): Promise<Note[]> => {
   try {
     const response = await Api.get('/notes');
     return response.data;
@@ -22,7 +23,7 @@ export const getNotes = async () => {
   }
 };
 
-export const updateNote = async (noteId: string, noteData: { title: string; content: string }) => {
+export const updateNote = async (noteId: string, noteData: { title: string; content: string }): Promise<Note> => {
   try {
     const response = await Api.put(`/notes/${noteId}`, noteData);       
 
@@ -34,17 +35,16 @@ export const updateNote = async (noteId: string, noteData: { title: string; cont
   }
 };
 
-export const deleteNote = async (noteId: string) => {
+export const deleteNote = async (noteId: string): Promise<void> => {
   try {
-    const response = await Api.delete(`/notes/${noteId}`);
-    return response.data;
+    await Api.delete(`/notes/${noteId}`);
     } catch (error) {
     console.error(error);
     throw error;
   }
 };
 
-export const getNoteById = async (noteId: string) => {
+export const getNoteById = async (noteId: string): Promise<Note> => {
     try {
     const response = await Api.get(`/notes/${noteId}`);
     return response.data;
