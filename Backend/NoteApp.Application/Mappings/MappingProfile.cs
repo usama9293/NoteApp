@@ -1,5 +1,6 @@
 using AutoMapper;
 using NoteApp.Core.Entities;
+using NoteApp.Core.Enums;
 using NoteApp.Core.Models;
 
 namespace NoteApp.Application.Mappings
@@ -13,7 +14,8 @@ namespace NoteApp.Application.Mappings
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId));
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
         }
     }
 }

@@ -15,6 +15,7 @@ namespace NoteApp.Core.Interfaces
         Task<NoteModel?> GetByIdAsync(Guid id);
         Task<NoteModel> AddAsync(NoteCreateRequestDto noteDto);
         Task<NoteModel> UpdateAsync(NoteUpdateRequestDto noteDto);
+        Task ArchiveAsync(NoteArchiveRequestDto noteDto);
         Task DeleteAsync(NoteDeleteRequestDto noteDto);
 
     }

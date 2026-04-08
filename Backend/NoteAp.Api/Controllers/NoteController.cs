@@ -46,6 +46,13 @@ namespace NoteApp.Api.Controllers
             return Ok(note);
         }
 
+        [HttpPatch("archive")]
+        public async Task<IActionResult> Archive(NoteArchiveRequestDto noteDto)
+        {
+            await _noteService.ArchiveAsync(noteDto);
+            return Ok();
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete(NoteDeleteRequestDto noteDto)
         {
