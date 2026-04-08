@@ -1,7 +1,14 @@
 import { useState,useEffect } from "react";
-import { getNotes,deleteNote } from "../Services/notesService";
+import { archiveNote, deleteNote, getNotes } from "../Services/notesService";
 import { useNavigate } from "react-router-dom";
-import type { Note } from "../Types";
+import { NoteStatus, type Note } from "../Types";
+import { useAuth } from "../Context/AuthContext";
+
+const noteStatusLabels: Record<Note["status"], string> = {
+  [NoteStatus.Active]: 'Active',
+  [NoteStatus.Archived]: 'Archived',
+  [NoteStatus.Deleted]: 'Deleted',
+};
 
 
 
@@ -12,6 +19,7 @@ const NotesPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { logout } = useAuth();
 
 
   const fetchNotes = async () => {
@@ -42,9 +50,28 @@ const NotesPage = () => {
     }
   };
 
+  const handleArchive = async (noteId: string) => {
+    try {
+      await archiveNote(noteId);
+      setNotes(notes.map(note => 
+        note.id === noteId ? { ...note, status: NoteStatus.Archived } : note
+      ));
+    } catch (error) {
+      console.error("Failed to archive note:", error);
+    }
+  };
+
+  const handleLogout= () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
+
     <div className="container">
+      <button onClick={handleLogout}>Logout</button>
       <h2>Your Notes</h2>
+      <button onClick={() => navigate('/notes/new')}>Add Note</button>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {notes.length === 0 ? (
@@ -55,8 +82,12 @@ const NotesPage = () => {
             <li key={note.id} className="note-item">
               <h3>{note.title}</h3>
               <p>{note.content}</p>
+              <p>Status: {noteStatusLabels[note.status]}</p>
               <div className="note-actions">
                 <button onClick={() => navigate(`/notes/${note.id}/edit`)}>Edit</button>
+                {note.status !== NoteStatus.Archived && (
+                  <button onClick={() => handleArchive(note.id)}>Archive</button>
+                )}
                 <button onClick={() => handleDelete(note.id)}>Delete</button>
               </div>
             </li>

@@ -13,7 +13,16 @@ export type Note = {
     content: string;
     createdAt: string;
     userId: string;
+    status: NoteStatusType;
 };
+
+export const NoteStatus = {
+    Active: 0,
+    Archived: 1,
+    Deleted: 2,
+} as const;
+
+export type NoteStatusType = (typeof NoteStatus)[keyof typeof NoteStatus];
 
 export type UserCreateRequestDto = {
     firstName: string;
