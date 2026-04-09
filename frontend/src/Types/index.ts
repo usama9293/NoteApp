@@ -24,6 +24,35 @@ export const NoteStatus = {
 
 export type NoteStatusType = (typeof NoteStatus)[keyof typeof NoteStatus];
 
+export const NoteSort = {
+    CreatedAt: 0,
+    UpdatedAt: 1,
+    Title: 2,
+} as const;
+
+export type NoteSortType = (typeof NoteSort)[keyof typeof NoteSort];
+
+export const NoteSortOrder = {
+    Ascending: 0,
+    Descending: 1,
+} as const;
+
+export type NoteSortOrderType = (typeof NoteSortOrder)[keyof typeof NoteSortOrder];
+
+export type NoteSearchRequestDto = {
+    title?: string;
+    content?: string;
+    status?: NoteStatusType;
+    searchTerm: string;
+    fromCreatedAt?: string;
+    toCreatedAt?: string;
+    includeDeleted: boolean;
+    pageSize: number;
+    pageNumber: number;
+    sortBy: NoteSortType;
+    sortOrder: NoteSortOrderType;
+};
+
 export type UserCreateRequestDto = {
     firstName: string;
     lastName: string;
@@ -47,3 +76,13 @@ export type AuthContextType = {
   login: (data: AuthResponseDto) => void
   logout: () => void
 }
+
+
+export type PagedResult<T> = {
+    items: T[];
+    totalCount: number;
+    pageSize: number;
+    pageNumber: number;
+    totalPages: number;
+};
+

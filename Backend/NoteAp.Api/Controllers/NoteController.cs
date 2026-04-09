@@ -60,6 +60,12 @@ namespace NoteApp.Api.Controllers
             return Ok();
         }
         
+        [HttpPost("search")]
+        public async Task<IActionResult> Search([FromBody] NoteSearchRequestDto searchDto)
+        {
+            var notes = await _noteService.SearchAsync(searchDto);
+            return Ok(notes);
+        }
 
     }
 }
