@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	--font-sans: "Manrope", "Segoe UI", "Noto Sans", sans-serif;
+	--color-ink-50: #f3f4f6;
+	--color-ink-100: #e5e7eb;
+	--color-ink-300: #9ca3af;
+	--color-ink-700: #374151;
+	--color-ink-800: #1f2937;
+	--color-ink-900: #111827;
+	--color-night-900: #0b111c;
+	--color-night-800: #141d2f;
+	--color-brand: #22c55e;
+	--color-brand-deep: #16a34a;
+}
+
+html,
+body,
+#root {
+	min-height: 100%;
+}
+
+body {
+	@apply m-0 bg-ink-50 text-ink-900 antialiased transition-colors duration-300;
+}
+
+html.dark body {
+	@apply bg-night-900 text-ink-50;
+}
+
+@layer components {
+	.app-shell {
+		@apply min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(34,197,94,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(15,23,42,0.18),transparent_45%)];
+	}
+
+	.page-wrap {
+		@apply mx-auto w-full max-w-5xl px-4 py-8 sm:px-6;
+	}
+
+	.panel {
+		@apply rounded-2xl border border-ink-100/80 bg-white/90 p-6 shadow-[0_20px_50px_-35px_rgba(15,23,42,0.55)] backdrop-blur;
+	}
+
+	.dark .panel {
+		@apply border-white/10 bg-night-800/85 shadow-[0_20px_50px_-35px_rgba(0,0,0,0.8)];
+	}
+
+	.field-label {
+		@apply mb-2 block text-sm font-medium text-ink-700 dark:text-ink-100;
+	}
+
+	.input-base {
+		@apply w-full rounded-xl border border-ink-100 bg-white px-3 py-2.5 text-sm text-ink-900 shadow-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20 dark:border-white/10 dark:bg-night-900 dark:text-ink-50;
+	}
+
+	.btn-primary {
+		@apply inline-flex items-center justify-center rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-deep disabled:cursor-not-allowed disabled:opacity-60;
+	}
+
+	.btn-secondary {
+		@apply inline-flex items-center justify-center rounded-xl border border-ink-100 bg-white px-4 py-2.5 text-sm font-medium text-ink-800 transition hover:bg-ink-50 dark:border-white/10 dark:bg-night-900 dark:text-ink-100 dark:hover:bg-night-800;
+	}
+}

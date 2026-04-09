@@ -61,36 +61,43 @@ export default function NoteFormPage() {
         };
 
     return (
-       <div>
-        <h2>{isEditMode ? 'Edit Note' : 'Create Note'}</h2>
-        {error && <p className="error">{error}</p>} 
+       <div className="page-wrap">
+        <div className="panel mx-auto max-w-2xl space-y-6">
+        <h2 className="text-2xl font-semibold tracking-tight">{isEditMode ? 'Edit Note' : 'Create Note'}</h2>
+        {error && <p className="rounded-lg border border-red-300/60 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">{error}</p>} 
         <form onSubmit={handleSubmit}>
-    
-            <div className="form-group">
-                <label>Title:</label>
+            <div className="space-y-4">
+            <div>
+                <label className="field-label">Title</label>
                 <input
+                    className="input-base"
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
                 />
             </div>
-            <div className="form-group">
-                <label>Content:</label>
+            <div>
+                <label className="field-label">Content</label>
                 <textarea
+                    className="input-base min-h-40"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     required
                 />
             </div>
-            <button type="submit" disabled={loading}>
+            <div className="flex flex-wrap gap-3">
+            <button className="btn-primary" type="submit" disabled={loading}>
                 {loading ? 'Saving...' : 'Save Note'}
             </button>
-            <button type="button" onClick={() => navigate('/notes')}>
-  Cancel
-</button>
+            <button className="btn-secondary" type="button" onClick={() => navigate('/notes')}>
+              Cancel
+            </button>
+            </div>
+            </div>
         </form>
          </div>
+       </div>
     );
 
 }
