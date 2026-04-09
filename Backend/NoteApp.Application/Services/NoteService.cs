@@ -25,7 +25,7 @@ namespace NoteApp.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<NoteModel> AddAsync(NoteCreateRequestDto noteDto)
+        public async Task<NoteModel> AddAsync(NoteCreateRequestDto noteDto, Guid userId)
         {
 
              var note = new Note
@@ -34,7 +34,7 @@ namespace NoteApp.Application.Services
                  Title = noteDto.Title,
                  Content = noteDto.Content,
                  CreatedAt = DateTime.UtcNow,
-                 UserId = noteDto.UserId,
+                 UserId = userId,
                  Status = NoteStatus.Active
              };
 
@@ -43,10 +43,10 @@ namespace NoteApp.Application.Services
              return _mapper.Map<NoteModel>(note);
         }
 
-        public async Task DeleteAsync(NoteDeleteRequestDto noteDto)
+        public async Task DeleteAsync(NoteDeleteRequestDto noteDto, Guid userId)
         {
             var note = await NoteRepository.GetByIdAsync(noteDto.Id);
-            if (note == null || note.Status == NoteStatus.Deleted)
+            if (note == null || note.Status == NoteStatus.Deleted || note.UserId != userId)
             {
                 throw new NoteNotFound($"Note with ID {noteDto.Id} not found.");
             }
@@ -55,23 +55,23 @@ namespace NoteApp.Application.Services
             await NoteRepository.UpdateAsync(note);
         }
 
-        public async Task<IEnumerable<NoteModel>> GetAllAsync()
+        public async Task<IEnumerable<NoteModel>> GetAllAsync(Guid userId)
         {
             var notes = await NoteRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<NoteModel>>(notes.Where(note => note.Status != NoteStatus.Deleted));
+            return _mapper.Map<IEnumerable<NoteModel>>(notes.Where(note => note.UserId == userId && note.Status != NoteStatus.Deleted));
         }
 
-        public async Task<NoteModel?> GetByIdAsync(Guid id)
+        public async Task<NoteModel?> GetByIdAsync(Guid id, Guid userId)
         {
             var note = await NoteRepository.GetByIdAsync(id);
-            return note == null || note.Status == NoteStatus.Deleted ? null : _mapper.Map<NoteModel>(note);
+            return note == null || note.Status == NoteStatus.Deleted || note.UserId != userId ? null : _mapper.Map<NoteModel>(note);
         }
         
 
-        public async Task<NoteModel> UpdateAsync(NoteUpdateRequestDto noteDto)
+        public async Task<NoteModel> UpdateAsync(NoteUpdateRequestDto noteDto, Guid userId)
         {
             var note = await NoteRepository.GetByIdAsync(noteDto.Id);
-            if (note == null || note.Status == NoteStatus.Deleted)
+            if (note == null || note.Status == NoteStatus.Deleted || note.UserId != userId)
             {
                 throw new NoteNotFound($"Note with ID {noteDto.Id} not found.");
             }
@@ -84,10 +84,10 @@ namespace NoteApp.Application.Services
             return _mapper.Map<NoteModel>(note);
         }
 
-        public async Task ArchiveAsync(NoteArchiveRequestDto noteDto)
+        public async Task ArchiveAsync(NoteArchiveRequestDto noteDto, Guid userId)
         {
             var note = await NoteRepository.GetByIdAsync(noteDto.Id);
-            if (note == null || note.Status == NoteStatus.Deleted)
+            if (note == null || note.Status == NoteStatus.Deleted || note.UserId != userId)
             {
                 throw new NoteNotFound($"Note with ID {noteDto.Id} not found.");
             }
@@ -97,10 +97,10 @@ namespace NoteApp.Application.Services
         }
 
 
-        public async Task<PagedResult<NoteModel>> SearchAsync(NoteSearchRequestDto searchDto)
+        public async Task<PagedResult<NoteModel>> SearchAsync(NoteSearchRequestDto searchDto, Guid userId)
         {
             var notes = await NoteRepository.GetAllAsync();
-            var query = notes.AsQueryable();
+            var query = notes.Where(note => note.UserId == userId).AsQueryable();
 
             if (!searchDto.IncludeDeleted)
             {

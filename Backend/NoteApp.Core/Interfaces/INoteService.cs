@@ -11,13 +11,13 @@ namespace NoteApp.Core.Interfaces
     public interface INoteService 
     {
        
-        Task<IEnumerable<NoteModel>> GetAllAsync();
-        Task<NoteModel?> GetByIdAsync(Guid id);
-        Task<NoteModel> AddAsync(NoteCreateRequestDto noteDto);
-        Task<NoteModel> UpdateAsync(NoteUpdateRequestDto noteDto);
-        Task<PagedResult<NoteModel>> SearchAsync(NoteSearchRequestDto searchDto);
-        Task ArchiveAsync(NoteArchiveRequestDto noteDto);
-        Task DeleteAsync(NoteDeleteRequestDto noteDto);
+        Task<IEnumerable<NoteModel>> GetAllAsync(Guid userId);
+        Task<NoteModel?> GetByIdAsync(Guid id, Guid userId);
+        Task<NoteModel> AddAsync(NoteCreateRequestDto noteDto, Guid userId);
+        Task<NoteModel> UpdateAsync(NoteUpdateRequestDto noteDto, Guid userId);
+        Task<PagedResult<NoteModel>> SearchAsync(NoteSearchRequestDto searchDto, Guid userId);
+        Task ArchiveAsync(NoteArchiveRequestDto noteDto, Guid userId);
+        Task DeleteAsync(NoteDeleteRequestDto noteDto, Guid userId);
 
     }
 }

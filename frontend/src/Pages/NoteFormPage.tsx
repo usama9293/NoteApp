@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createNote, getNoteById, updateNote } from '../Services/notesService'
+import { useAuth } from '../Context/AuthContext'
 
 export default function NoteFormPage() {
 
@@ -10,6 +11,7 @@ export default function NoteFormPage() {
         const [error, setError] = useState('');
         const navigate = useNavigate();
         const { id } = useParams<{ id: string }>();
+        const { user } = useAuth();
         const isEditMode = !!id
 
 
@@ -42,7 +44,12 @@ export default function NoteFormPage() {
                 if (isEditMode) {
                     await updateNote(id!, { title, content });
                 } else {
-                    await createNote({ title, content });
+                    if (!user?.id) {
+                        setError('Please login again to create a note.');
+                        return;
+                    }
+
+                    await createNote({ title, content, userId: user.id });
                 }
                 navigate('/notes');
             } catch {

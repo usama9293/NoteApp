@@ -2,7 +2,7 @@ import Api from "./api";
 import type { Note, NoteSearchRequestDto, PagedResult } from "../Types";
 
 
-export const createNote = async (noteData: { title: string; content: string }): Promise<Note> => {
+export const createNote = async (noteData: { title: string; content: string; userId: string }): Promise<Note> => {
   try {
     const response = await Api.post('/note', noteData);
     return response.data;
