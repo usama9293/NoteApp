@@ -3,6 +3,7 @@ import { AuthProvider } from "./Context/AuthContext";
 import Login from "./Pages/LoginPage";
 import Notes from "./Pages/NotesPage";
 import Register from "./Pages/RegisterPage";
+import NoteFormPage from "./Pages/NoteFormPage";
 
 
 
@@ -17,6 +18,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/notes" element={<Notes />} />
         <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/notes/new" element={<NoteFormPage />} />
+       <Route path="/notes/:id/edit" element={<NoteFormPage />} />
       </Routes>
        </AuthProvider>
       </BrowserRouter>
